@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :ensure_current_user_is_user, only: [:edit, :show, :update, :destroy]
-  skip_before_action :require_complete_profile, only: [:edit, :update, :confirm_email]
-  skip_before_action :require_current_user, only: :confirm_email
+  skip_before_action :require_complete_profile, only: [:edit, :update, :confirm_email, :unsubscribe, :do_unsubscribe]
+  skip_before_action :require_current_user, only: [:confirm_email, :unsubscribe, :do_unsubscribe]
   decorates_assigned :user
 
   def edit
@@ -11,7 +11,12 @@ class UsersController < ApplicationController
   end
 
   def unsubscribe
-    @user = User.find_by_id(params[:id])
+    @user = User.find_by_confirm_token(params[:id])
+
+    if not @user
+      flash[:errors] = ["No such user"]
+      redirect_to root_url
+    end
   end
 
   def update
@@ -29,6 +34,23 @@ class UsersController < ApplicationController
     else
       flash[:errors] = @user.errors.full_messages
       redirect_to edit_user_url(@user)
+    end
+  end
+
+  def do_unsubscribe
+    @user = User.find_by_confirm_token(params[:id])
+
+    if @user
+      if @user.destroy
+        redirect_to root_url,
+          notice: "Successfully deleted account"
+      else
+        flash[:errors] = @user.errors.full_messages
+        redirect_to root_url
+      end
+    else
+      flash[:errors] = ["Unsubscribe token not recognized"]
+      redirect_to root_url
     end
   end
 
