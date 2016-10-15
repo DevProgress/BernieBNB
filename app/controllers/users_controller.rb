@@ -14,10 +14,6 @@ class UsersController < ApplicationController
     @user = User.find_by_id(params[:id])
   end
 
-  def do_unsubscribe
-    @user = User.find_by_id(params[:id])
-  end
-
   def update
     if @user.update(user_params)
       if @user.email_confirmed
