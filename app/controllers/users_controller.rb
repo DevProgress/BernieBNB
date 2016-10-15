@@ -1,13 +1,22 @@
 class UsersController < ApplicationController
   before_action :ensure_current_user_is_user, only: [:edit, :show, :update, :destroy]
-  skip_before_action :require_complete_profile, only: [:edit, :update, :confirm_email]
-  skip_before_action :require_current_user, only: :confirm_email
+  skip_before_action :require_complete_profile, only: [:edit, :update, :confirm_email, :unsubscribe, :do_unsubscribe]
+  skip_before_action :require_current_user, only: [:confirm_email, :unsubscribe, :do_unsubscribe]
   decorates_assigned :user
 
   def edit
   end
 
   def show
+  end
+
+  def unsubscribe
+    @user = User.find_by_confirm_token(params[:id])
+
+    if not @user
+      flash[:errors] = ["Something went wrong, maybe you are already unsubscribed?  If you are having trouble please admin@hillarybnb.com"]
+      redirect_to root_url
+    end
   end
 
   def update
@@ -28,10 +37,27 @@ class UsersController < ApplicationController
     end
   end
 
+  def do_unsubscribe
+    @user = User.find_by_confirm_token(params[:id])
+
+    if @user
+      if @user.destroy
+        redirect_to root_url,
+          notice: "OK, your account is deleted."
+      else
+        flash[:errors] = @user.errors.full_messages
+        redirect_to root_url
+      end
+    else
+      flash[:errors] = ["Something went wrong, maybe you are already unsubscribed?  If you are having trouble please admin@hillarybnb.com"]
+      redirect_to root_url
+    end
+  end
+
   def destroy
     if @user.destroy
       redirect_to root_url,
-        notice: "Successfully deleted account"
+        notice: "OK, your account is deleted."
     else
       flash[:errors] = @user.errors.full_messages
       redirect_to edit_user_url(@user)
