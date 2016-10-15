@@ -14,7 +14,7 @@ RSpec.describe "User unsubscribes", type: :feature do
     visit unsubscribe_user_url(@user.confirm_token)
     click_button("Click here to unsubscribe")
 
-    expect(page).to have_content("Successfully deleted account")
+    expect(page).to have_content("OK, your account is deleted.")
   end
 end
 
