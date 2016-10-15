@@ -43,7 +43,7 @@ class UsersController < ApplicationController
     if @user
       if @user.destroy
         redirect_to root_url,
-          notice: "Successfully deleted account"
+          notice: "OK, your account is deleted."
       else
         flash[:errors] = @user.errors.full_messages
         redirect_to root_url
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   def destroy
     if @user.destroy
       redirect_to root_url,
-        notice: "Successfully deleted account"
+        notice: "OK, your account is deleted."
     else
       flash[:errors] = @user.errors.full_messages
       redirect_to edit_user_url(@user)
