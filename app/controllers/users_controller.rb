@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     @user = User.find_by_confirm_token(params[:id])
 
     if not @user
-      flash[:errors] = ["No such user"]
+      flash[:errors] = ["Something went wrong, maybe you are already unsubscribed?  If you are having trouble please admin@hillarybnb.com"]
       redirect_to root_url
     end
   end
@@ -43,13 +43,13 @@ class UsersController < ApplicationController
     if @user
       if @user.destroy
         redirect_to root_url,
-          notice: "Successfully deleted account"
+          notice: "OK, your account is deleted."
       else
         flash[:errors] = @user.errors.full_messages
         redirect_to root_url
       end
     else
-      flash[:errors] = ["Unsubscribe token not recognized"]
+      flash[:errors] = ["Something went wrong, maybe you are already unsubscribed?  If you are having trouble please admin@hillarybnb.com"]
       redirect_to root_url
     end
   end
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   def destroy
     if @user.destroy
       redirect_to root_url,
-        notice: "Successfully deleted account"
+        notice: "OK, your account is deleted."
     else
       flash[:errors] = @user.errors.full_messages
       redirect_to edit_user_url(@user)

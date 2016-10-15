@@ -65,7 +65,7 @@ RSpec.describe "User Signs Up With Facebook", type: :feature do
     wascount = User.count
     click_button 'Delete Account'
     expect(User.count).to eq(wascount - 1)
-    expect(page).to have_content('Successfully deleted account')
+    expect(page).to have_content('OK, your account is deleted.')
   end
 
   scenario 'facebook fails' do
