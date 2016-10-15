@@ -1,0 +1,9 @@
+.profile-page
+  %p.lead.text-center Unsubscribe
+
+  %div{:style => 'text-align: center'} <br>Unsubscribing will delete your account, including all active hostings and visits.<br>You will no longer receive any emails from HillaryBNB.<br><br>
+  = button_to 'Click here to unsubscribe',
+    { action: 'do_unsubscribe', id: @user.confirm_token },
+      class: 'btn btn-danger btn-block btn-lg',
+      method: 'delete'
+

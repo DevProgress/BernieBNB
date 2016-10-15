@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   resources :users, only: [:edit, :show, :update, :destroy] do
     member do
       get :confirm_email
+      get :unsubscribe
+      delete :do_unsubscribe
     end
 
     resources :visits, only: [:new]
