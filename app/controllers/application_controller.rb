@@ -6,6 +6,16 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    message = "Not found, perhaps it was deleted."
+    logger.error message
+    if current_user
+      redirect_to user_url(current_user), alert: message
+    else
+      redirect_to root_url, alert: message
+    end
+  end
+
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale
   end
